@@ -20,7 +20,7 @@ var CoWin = (() => {
     let info_len = document.getElementById('info_len');
 
     return {
-        getCenters : async (district_id, vaccine = 'any', pincode = '0', min_age = 0) => {
+        getCenters : async (district_id, vaccine = 'any', pincode = '0', min_age = 0, center_name = '') => {
             let res_capacity = 0;
             let date = new Date();
             date = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
@@ -37,6 +37,10 @@ var CoWin = (() => {
                 centers.forEach(center => {
 
                     if (pincode && pincode != '0' && pincode != center.pincode){
+                        return;
+                    }
+
+                    if (center_name && center_name != 'any' && !center.name.toLowerCase().includes(center_name.toLowerCase())){
                         return;
                     }
 
@@ -57,7 +61,7 @@ var CoWin = (() => {
                                 `<span class="badge bg-danger">${session.available_capacity}</span>`}</td>
                             <td>${session.vaccine}</td>
                             <td>${center.fee_type}</td>
-                            <td>${session.date}<br>${center.from}<br>${center.to}</td>
+                            <td>${session.date}<br><small>${center.from}<br>${center.to}</small></td>
                             <td>${session.min_age_limit}</td>
                         `;
 
@@ -95,6 +99,7 @@ var Filter = (() => {
     let pincode = document.getElementById('pincode');
     let vaccine = document.getElementById('vaccine');
     let age = document.getElementById('age');
+    let center = document.getElementById('center');
 
     let checkInterval = null;
     let intervalTime = 30;          // 30 sec interval
@@ -106,7 +111,7 @@ var Filter = (() => {
         }
 
         spinner.style.display = 'inline-block';
-        await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value));
+        await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value), center.value);
         spinner.style.display = 'none';
     });
 
@@ -173,11 +178,16 @@ var Filter = (() => {
                 Error.show('Select vaccine type');
                 is_valid = false;
             }
+
+            if (![0, 18, 45].includes(parseInt(age.value))){
+                Error.show('Select minimum age limit');
+                is_valid = false;
+            }
             return is_valid;
         },
 
         runInterval : async () => {
-            let res_capacity = await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value));
+            let res_capacity = await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value), center.value);
 
             if (res_capacity > 0){
                 // Play a sound

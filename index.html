@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoWin Centers</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+</head>
+<body class="bg-light">
+
+    <div class="container">
+        <div class="card my-5 shadow-sm">
+            <div class="card-body">
+
+                <div class="shadow-sm p-3 mb-3 filters">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="state" class="form-label">State</label>
+                            <select class="form-select" id="state" required>
+                                <option value="" selected>Select your state</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="district" class="form-label">District</label>
+                            <select class="form-select" id="district" required>
+                                <option value="" selected>Select your district</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="pincode" class="form-label">Pincode</label>
+                            <input type="number" class="form-control" id="pincode" placeholder="452010">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="vaccine" class="form-label">Vaccine</label>
+                            <select class="form-select" id="vaccine">
+                                <option value="any" selected>Any</option>
+                                <option value="COVISHIELD">COVISHIELD</option>
+                                <option value="COVAXIN">COVAXIN</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="btn-getresp" class="btn btn-success">
+                        Get Response
+                        <div class="text-light spinner-border spinner-border-sm" style="display: none;" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+
+                    <button id="btn-check-start" class="btn btn-success ml-2">
+                        Check every minute
+                    </button>
+                    <button id="btn-check-stop" class="btn btn-danger ml-2" style="display: none;">
+                        Stop Checking
+                        <div class="text-light spinner-grow spinner-grow-sm" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </button>
+                </div>
+
+                <div id="info_len"></div>
+
+                <table class="table">
+                    <thead>
+                        <th>Center</th>
+                        <th>Capacity</th>
+                        <th>Vaccine</th>
+                        <th>Fee</th>
+                        <th style="width: 100px">Time</th>
+                        <th>Min Age</th>
+                    </thead>
+                    <tbody id="info_body"></tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+    <div aria-live="polite" aria-atomic="true" class="d-flex justify-content-end align-items-end w-100">
+        <div class="toast align-items-center text-white bg-danger border-0" id="err-toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="err-msg">
+                    Hello, world! This is a toast message.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js" integrity="sha384-lpyLfhYuitXl2zRZ5Bn2fqnhNAKOAaM/0Kr9laMspuaMiZfGmfwRNFh8HlMy49eQ" crossorigin="anonymous"></script>
+
+    <script src="./assets/script.js"></script>
+</body>
+</html>

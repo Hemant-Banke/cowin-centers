@@ -93,6 +93,7 @@ var Filter = (() => {
 
     let checkInterval = null;
     let intervalTime = 30;          // 30 sec interval
+    btn_check_start.innerText = `Check every ${intervalTime}s`;
 
     btn_resp.addEventListener('click', () => {
         if (!Filter.check()){

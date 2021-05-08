@@ -20,7 +20,7 @@ var CoWin = (() => {
     let info_len = document.getElementById('info_len');
 
     return {
-        getCenters : async (district_id, vaccine = 'any', pincode = '0') => {
+        getCenters : async (district_id, vaccine = 'any', pincode = '0', min_age = 0) => {
             let res_capacity = 0;
             let date = new Date();
             date = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
@@ -42,6 +42,10 @@ var CoWin = (() => {
 
                     center.sessions.forEach(session => {
                         if (vaccine && vaccine != 'any' && vaccine.toLowerCase() != session.vaccine.toLowerCase()){
+                            return;
+                        }
+
+                        if (min_age && min_age != session.min_age_limit){
                             return;
                         }
 
@@ -90,18 +94,19 @@ var Filter = (() => {
     let district = document.getElementById('district');
     let pincode = document.getElementById('pincode');
     let vaccine = document.getElementById('vaccine');
+    let age = document.getElementById('age');
 
     let checkInterval = null;
     let intervalTime = 30;          // 30 sec interval
     btn_check_start.innerText = `Check every ${intervalTime}s`;
 
-    btn_resp.addEventListener('click', () => {
+    btn_resp.addEventListener('click', async () => {
         if (!Filter.check()){
             return;
         }
 
         spinner.style.display = 'inline-block';
-        CoWin.getCenters(district.value, vaccine.value, pincode.value);
+        await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value));
         spinner.style.display = 'none';
     });
 
@@ -172,7 +177,7 @@ var Filter = (() => {
         },
 
         runInterval : async () => {
-            let res_capacity = await CoWin.getCenters(district.value, vaccine.value, pincode.value);
+            let res_capacity = await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value));
 
             if (res_capacity > 0){
                 // Play a sound

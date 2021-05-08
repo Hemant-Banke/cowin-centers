@@ -39,6 +39,14 @@
                                 <option value="COVAXIN">COVAXIN</option>
                             </select>
                         </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="age" class="form-label">Min Age</label>
+                            <select class="form-select" id="age">
+                                <option value="0" selected>Any</option>
+                                <option value="18">18+</option>
+                                <option value="45">45+</option>
+                            </select>
+                        </div>
                     </div>
 
                     <button id="btn-getresp" class="btn btn-success">
@@ -61,17 +69,19 @@
 
                 <div id="info_len"></div>
 
-                <table class="table">
-                    <thead>
-                        <th>Center</th>
-                        <th>Capacity</th>
-                        <th>Vaccine</th>
-                        <th>Fee</th>
-                        <th style="width: 100px">Time</th>
-                        <th>Min Age</th>
-                    </thead>
-                    <tbody id="info_body"></tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <th>Center</th>
+                            <th>Capacity</th>
+                            <th>Vaccine</th>
+                            <th>Fee</th>
+                            <th style="width: 100px">Time</th>
+                            <th>Min Age</th>
+                        </thead>
+                        <tbody id="info_body"></tbody>
+                    </table>
+                </div>
 
             </div>
         </div>

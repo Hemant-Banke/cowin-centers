@@ -1,3 +1,14 @@
-/**
+/*
     Container
 */
+
+.container{
+    padding: 1rem;
+}
+
+
+@media(max-width: 767px){
+    .container{
+        padding: 0;
+    }
+}

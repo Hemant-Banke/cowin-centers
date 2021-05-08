@@ -102,7 +102,7 @@ var Filter = (() => {
     let center = document.getElementById('center');
 
     let checkInterval = null;
-    let intervalTime = 30;          // 30 sec interval
+    let intervalTime = 60;          // 60 sec interval
     btn_check_start.innerText = `Check every ${intervalTime}s`;
 
     btn_resp.addEventListener('click', async () => {
@@ -169,6 +169,9 @@ var Filter = (() => {
     return {
         check : () => {
             let is_valid = true;
+            pincode.value = pincode.value.trim();
+            center.value = center.value.trim();
+
             if (!district.value){
                 Error.show('Select a district');
                 is_valid = false;

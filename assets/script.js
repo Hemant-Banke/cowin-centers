@@ -86,7 +86,7 @@ var CoWin = (() => {
 })();
 
 
-
+var audio_beep = new Audio("./assets/beep.wav");
 var Filter = (() => {
     let btn_resp = document.getElementById('btn-getresp');
     let btn_check_start = document.getElementById('btn-check-start');
@@ -194,8 +194,7 @@ var Filter = (() => {
 
             if (res_capacity > 0){
                 // Play a sound
-                let audio = new Audio("./assets/beep.wav");
-                audio.play();
+                audio_beep.play();
             }
         },
 

@@ -20,7 +20,7 @@ var CoWin = (() => {
     let info_len = document.getElementById('info_len');
 
     return {
-        getCenters : async (district_id, vaccine = 'any', pincode = '0', min_age = 0, center_name = '') => {
+        getCenters : async (district_id, vaccine = 'any', pincode = '0', min_age = 0, center_name = '', dose = 'any') => {
             let res_capacity = 0;
             let date = new Date();
             date = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
@@ -49,6 +49,11 @@ var CoWin = (() => {
                             return;
                         }
 
+                        let prefered_capacity = session.available_capacity;
+                        if (dose && dose != 'any'){
+                            prefered_capacity = (dose == '1') ? session.available_capacity_dose1: session.available_capacity_dose2;
+                        }
+
                         if (min_age && min_age != session.min_age_limit){
                             return;
                         }
@@ -56,9 +61,9 @@ var CoWin = (() => {
                         let row = document.createElement('tr');
                         row.innerHTML = `
                             <td><b>${center.name}</b><br>${center.address}, ${center.block_name}<br>${center.pincode} <b>(${center.lat}, ${center.long})</b></td>
-                            <td>${(session.available_capacity > 0) ?
-                                `<span class="badge bg-success">${session.available_capacity}</span>` :
-                                `<span class="badge bg-danger">${session.available_capacity}</span>`}</td>
+                            <td>${(prefered_capacity > 0) ?
+                                `<span class="badge bg-success">${prefered_capacity}</span>` :
+                                `<span class="badge bg-danger">${prefered_capacity}</span>`}</td>
                             <td>${session.vaccine}</td>
                             <td>${center.fee_type}</td>
                             <td>${session.date}<br><small>${center.from}<br>${center.to}</small></td>
@@ -67,7 +72,7 @@ var CoWin = (() => {
 
                         info_body.appendChild(row);
                         res_len += 1;
-                        res_capacity += session.available_capacity;
+                        res_capacity += prefered_capacity;
                     });
                 });
 
@@ -100,9 +105,10 @@ var Filter = (() => {
     let vaccine = document.getElementById('vaccine');
     let age = document.getElementById('age');
     let center = document.getElementById('center');
+    let dose = document.getElementById('dose');
 
     let checkInterval = null;
-    let intervalTime = 60;          // 60 sec interval
+    let intervalTime = 6;          // 60 sec interval
     btn_check_start.innerText = `Check every ${intervalTime}s`;
 
     btn_resp.addEventListener('click', async () => {
@@ -111,7 +117,7 @@ var Filter = (() => {
         }
 
         spinner.style.display = 'inline-block';
-        await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value), center.value);
+        await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value), center.value, dose.value);
         spinner.style.display = 'none';
     });
 
@@ -182,6 +188,11 @@ var Filter = (() => {
                 is_valid = false;
             }
 
+            if (!['1', '2', 'any'].includes(dose.value)){
+                Error.show('Select dose type');
+                is_valid = false;
+            }
+
             if (![0, 18, 45].includes(parseInt(age.value))){
                 Error.show('Select minimum age limit');
                 is_valid = false;
@@ -190,7 +201,7 @@ var Filter = (() => {
         },
 
         runInterval : async () => {
-            let res_capacity = await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value), center.value);
+            let res_capacity = await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value), center.value, dose.value);
 
             if (res_capacity > 0){
                 // Play a sound

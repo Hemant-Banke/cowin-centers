@@ -20,7 +20,7 @@ var CoWin = (() => {
     let info_len = document.getElementById('info_len');
 
     return {
-        getCenters : async (district_id, vaccine = 'any', pincode = '0', min_age = 0, center_name = '', dose = 'any') => {
+        getCenters : async (district_id, vaccine = 'any', pincode = '0', min_age = 0, center_name = '', dose = 'any', fee = 'any') => {
             let res_capacity = 0;
             let date = new Date();
             date = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
@@ -41,6 +41,10 @@ var CoWin = (() => {
                     }
 
                     if (center_name && center_name != 'any' && !center.name.toLowerCase().includes(center_name.toLowerCase())){
+                        return;
+                    }
+
+                    if (fee && fee != 'any' && center.fee_type.toLowerCase() != fee.toLowerCase()){
                         return;
                     }
 
@@ -106,6 +110,7 @@ var Filter = (() => {
     let age = document.getElementById('age');
     let center = document.getElementById('center');
     let dose = document.getElementById('dose');
+    let fee = document.getElementById('fee');
 
     let checkInterval = null;
     let intervalTime = 6;          // 60 sec interval
@@ -117,7 +122,14 @@ var Filter = (() => {
         }
 
         spinner.style.display = 'inline-block';
-        await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value), center.value, dose.value);
+        await CoWin.getCenters(
+            district.value,
+            vaccine.value,
+            pincode.value,
+            parseInt(age.value),
+            center.value,
+            dose.value,
+            fee.value);
         spinner.style.display = 'none';
     });
 
@@ -193,6 +205,11 @@ var Filter = (() => {
                 is_valid = false;
             }
 
+            if (!['free', 'paid', 'any'].includes(fee.value)){
+                Error.show('Select Fee Type');
+                is_valid = false;
+            }
+
             if (![0, 18, 45].includes(parseInt(age.value))){
                 Error.show('Select minimum age limit');
                 is_valid = false;
@@ -201,7 +218,14 @@ var Filter = (() => {
         },
 
         runInterval : async () => {
-            let res_capacity = await CoWin.getCenters(district.value, vaccine.value, pincode.value, parseInt(age.value), center.value, dose.value);
+            let res_capacity = await CoWin.getCenters(
+                district.value,
+                vaccine.value,
+                pincode.value,
+                parseInt(age.value),
+                center.value,
+                dose.value,
+                fee.value);
 
             if (res_capacity > 0){
                 // Play a sound
